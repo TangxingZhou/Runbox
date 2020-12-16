@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import permissions
 from rest_framework import generics
 from .serializers import *
@@ -35,8 +37,33 @@ class ExecutionDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ExecutionSerializer
 
 
+class MyExecutionErrors(APIView):
+    """
+    View to list all users in the system.
+
+    * Requires token authentication.
+    * Only admin users are able to access this view.
+    """
+    # authentication_classes = [authentication.TokenAuthentication]
+    # permission_classes = [permissions.IsAdminUser]
+
+    # def get_object(self, pk):
+    #     try:
+    #         return ExecutionError.objects.get(pk=pk)
+    #     except ExecutionError.DoesNotExist:
+    #         raise Http404
+
+    def get(self, request, pk, format=None):
+        """
+        Return a list of all users.
+        """
+        error = SuiteStatistics.objects.filter(execution=Execution.objects.filter(id=pk))
+        serializer = SuiteStatisticsSerializer(error, many=True)
+        return Response(serializer.data)
+
+
 class ExecutionErrorList(generics.ListCreateAPIView):
-    queryset = ExecutionError.objects.all()
+    queryset = ExecutionError.objects.filter(execution_id=1)
     serializer_class = ExecutionErrorSerializer
 
 

@@ -4,6 +4,7 @@ from .views import *
 urlpatterns = [
     path('executions/', ExecutionList.as_view()),
     path('executions/<int:pk>/', ExecutionDetail.as_view()),
+    path('executions/<int:pk>/errors/', MyExecutionErrors.as_view()),
     path('execution-errors/', ExecutionErrorList.as_view()),
     path('execution-errors/<int:pk>/', ExecutionErrorDetail.as_view()),
     path('suite-statistics/', SuiteStatisticsList.as_view()),
